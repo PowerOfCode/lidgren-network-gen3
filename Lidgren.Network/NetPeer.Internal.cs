@@ -123,8 +123,18 @@ namespace Lidgren.Network
 			}
 			m_lastSocketBind = now;
 
-			if (m_socket == null)
-				m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            if (m_socket == null)
+            {
+                if (Socket.OSSupportsIPv6)
+                {
+                    m_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+                    m_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
+                }
+                else
+                {
+                    m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                }
+            }
 
 			if (reBind)
 				m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, (int)1); 
@@ -260,7 +270,8 @@ namespace Lidgren.Network
 					{
 						try
 						{
-							m_socket.Shutdown(SocketShutdown.Receive);
+                            if(m_socket.Connected)
+							    m_socket.Shutdown(SocketShutdown.Receive);
 						}
 						catch(Exception ex)
 						{

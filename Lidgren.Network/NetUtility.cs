@@ -85,7 +85,7 @@ namespace Lidgren.Network
 
 		/// <summary>
 		/// Get IPv4 address from notation (xxx.xxx.xxx.xxx) or hostname (asynchronous version)
-		/// </summary>
+        /// </summary>
 		public static void ResolveAsync(string ipOrHost, ResolveAddressCallback callback)
 		{
 			if (string.IsNullOrEmpty(ipOrHost))
@@ -96,7 +96,7 @@ namespace Lidgren.Network
 			NetAddress ipAddress = null;
 			if (NetAddress.TryParse(ipOrHost, out ipAddress))
 			{
-				if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+				if (ipAddress.AddressFamily == AddressFamily.InterNetwork || ipAddress.AddressFamily == AddressFamily.InterNetworkV6)
 				{
 					callback(ipAddress);
 					return;
@@ -137,7 +137,7 @@ namespace Lidgren.Network
 					// check each entry for a valid IP address
 					foreach (var ipCurrent in entry.AddressList)
 					{
-						if (ipCurrent.AddressFamily == AddressFamily.InterNetwork)
+						if (ipCurrent.AddressFamily == AddressFamily.InterNetwork || ipCurrent.AddressFamily == AddressFamily.InterNetworkV6)
 						{
 							callback(ipCurrent);
 							return;
@@ -174,7 +174,7 @@ namespace Lidgren.Network
 			NetAddress ipAddress = null;
 			if (NetAddress.TryParse(ipOrHost, out ipAddress))
 			{
-				if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+                if (ipAddress.AddressFamily == AddressFamily.InterNetwork || ipAddress.AddressFamily == AddressFamily.InterNetworkV6)
 					return ipAddress;
 				throw new ArgumentException("This method will not currently resolve other than ipv4 addresses");
 			}
@@ -187,7 +187,7 @@ namespace Lidgren.Network
 					return null;
 				foreach (var address in addresses)
 				{
-					if (address.AddressFamily == AddressFamily.InterNetwork)
+                    if (address.AddressFamily == AddressFamily.InterNetwork || address.AddressFamily == AddressFamily.InterNetworkV6)
 						return address;
 				}
 				return null;
