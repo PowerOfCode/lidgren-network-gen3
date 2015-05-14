@@ -77,11 +77,11 @@ namespace Lidgren.Network
 			NetUtility.SortMembersList(fields);
 
 			foreach (PropertyInfo fi in fields)
-			{
-#if UNITY_WEBPLAYER || UNITY_4_5
+            {
+#if UNITY_WEBPLAYER || UNITY_4_5 || NET_40
 				MethodInfo getMethod = fi.GetGetMethod();
 #else
-				MethodInfo getMethod = fi.GetMethod;
+                MethodInfo getMethod = fi.GetMethod;
 #endif
 				if (getMethod != null)
 				{
