@@ -128,7 +128,14 @@ namespace Lidgren.Network
                 if (Socket.OSSupportsIPv6)
                 {
                     m_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
-                    m_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
+                    try
+                    {
+                        m_socket.SetSocketOption(SocketOptionLevel.IPv6, (SocketOptionName)27, 0);
+                    }
+                    catch
+                    {
+                        LogDebug("Failed to unset IPv6Only. Linux and Mac have this option off by default.");
+                    }
                 }
                 else
                 {
