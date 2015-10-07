@@ -12,6 +12,10 @@ namespace UnitTests
 		{
 			NetPeerConfiguration config = new NetPeerConfiguration("unittests");
 			config.EnableUPnP = true;
+			if (Socket.OSSupportsIPv6)
+				config.LocalAddress = IPAddress.IPv6Loopback;
+			else
+				config.LocalAddress = IPAddress.Loopback;
 			NetPeer peer = new NetPeer(config);
 			peer.Start(); // needed for initialization
 

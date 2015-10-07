@@ -127,15 +127,9 @@ namespace Lidgren.Network
             {
                 if (Socket.OSSupportsIPv6)
                 {
-                    m_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
-                    try
-                    {
+					m_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+					if (Environment.OSVersion.Platform != PlatformID.Unix)
                         m_socket.SetSocketOption(SocketOptionLevel.IPv6, (SocketOptionName)27, 0);
-                    }
-                    catch
-                    {
-                        LogDebug("Failed to unset IPv6Only. Linux and Mac have this option off by default.");
-                    }
                 }
                 else
                 {
@@ -151,7 +145,7 @@ namespace Lidgren.Network
 			m_socket.Blocking = false;
 
 			var ep = (EndPoint)new NetEndPoint(m_configuration.LocalAddress, reBind ? m_listenPort : m_configuration.Port);
-			m_socket.Bind(ep);
+			m_socket.Bind (ep);
 
 			try
 			{
