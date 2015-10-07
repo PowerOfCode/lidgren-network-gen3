@@ -11,11 +11,13 @@ namespace UnitTests
 		static void Main(string[] args)
 		{
 			NetPeerConfiguration config = new NetPeerConfiguration("unittests");
-			config.EnableUPnP = true;
 			if (Socket.OSSupportsIPv6)
 				config.LocalAddress = IPAddress.IPv6Loopback;
 			else
+			{
 				config.LocalAddress = IPAddress.Loopback;
+				config.EnableUPnP = false;
+			}
 			NetPeer peer = new NetPeer(config);
 			peer.Start(); // needed for initialization
 
@@ -32,10 +34,10 @@ namespace UnitTests
 			EncryptionTests.Run(peer);
 
 			var om = peer.CreateMessage();
-			peer.SendUnconnectedMessage(om, new IPEndPoint(IPAddress.Loopback, 14242));
+			peer.SendUnconnectedMessage(om, new IPEndPoint(config.LocalAddress, 14242));
 			try
 			{
-				peer.SendUnconnectedMessage(om, new IPEndPoint(IPAddress.Loopback, 14242));
+				peer.SendUnconnectedMessage(om, new IPEndPoint(config.LocalAddress, 14242));
 			}
 			catch (NetException nex)
 			{
